@@ -5,11 +5,12 @@
 
 
 {% if user.is_authenticated %}
-<h1>Records</h1>
+<div class="my-3">
+<h1 class="display-4 fw-normal">Records</h1>
+<hr class="border border-dark border-2 opacity-50">  
+</div>
 
-<hr>
-<br>
-
+<div class=" pt-3 pb-5 my-4">
 <table class="table table-bordered table-striped table-hover">
   <thead class="table-dark">
     <tr>
@@ -26,26 +27,62 @@
   </thead>
   <tbody>
     
-    {% if records %}
+
       {% for r in records %}
-        <tr>
-          <td>{{r.first_name}} {{r.last_name}}</td>   
-          <td>{{r.email}}</td>
-          <td>{{r.phone}}</td>
-          <td>{{r.address}}</td>
-          <td>{{r.city}}</td>
-          <td>{{r.state}}</td>
-          <td>{{r.zipcode}}</td>
-          <td>{{r.created_at}}</td>
-          <td><a href="{% url 'record' r.id %}">{{r.id}}</a></td>
+        {% if r.emp_id == user.id or user.id == 1 %}
+          <tr>
+            <td>{{r.first_name}} {{r.last_name}}</td>   
+            <td>{{r.email}}</td>
+            <td>{{r.phone}}</td>
+            <td>{{r.address}}</td>
+            <td>{{r.city}}</td>
+            <td>{{r.state}}</td>
+            <td>{{r.zipcode}}</td>
+            <td>{{r.created_at}}</td>
+            <td><a href="{% url 'record' r.id %}">{{r.id}}</a></td>
           </tr>
-        {% endfor %}
-          {% endif %}
+        {% endif %}
+      {% endfor %}
+
     
   </tbody>
 </table>
+</div>
 
-
+{% if user.id != 1 %}
+<div class="">
+  <h3 class="">More Records</h1>
+  <hr class="border border-dark border-1 opacity-10 mb-3">
+  <p class="lead">
+    NOTE -- You do not have access to view the full information of the following records. 
+  </p>
+</div>
+<div class="pt-3 my-2">
+  <table class="table table-bordered table-striped table-hover">
+    <thead class="table-secondary">
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Date Joined</th>
+      </tr>
+    </thead>
+    <tbody>
+  
+        {% for r in records %}
+          {% if r.emp_id != user.id %}
+            <tr>
+              <td>{{r.first_name}} {{r.last_name}}</td>   
+              <td>{{r.email}}</td>
+              <td>{{r.created_at}}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+  
+      
+    </tbody>
+  </table>
+  </div>
+{% endif %}
 
 {% else %}
 <div class="col-md-6 offset-md-3">
@@ -67,9 +104,9 @@
 
   <button type="submit" class="btn btn-primary">Login</button>
 </form>
-
+</div>
 
 {% endif %}
 
-</div>
+
 {% endblock  %}
